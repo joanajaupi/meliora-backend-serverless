@@ -6,7 +6,7 @@ module.exports.updateCategory = async (event) => {
 
     try{
         await connectToDatabase()
-        const { categoryName } = JSON.parse(event.body || '{}');
+        const { categoryName } = JSON.parse(event.body);
 
         if(!categoryName)
         {
