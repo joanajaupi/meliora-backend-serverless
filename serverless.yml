@@ -34,6 +34,7 @@ functions:
           - http:
               path: /categories
               method: get
+              cors: true
     
     getCategoryById:
         handler: handlers/CategoriesHandler/GetCategoryById.getCategoryById
@@ -41,6 +42,7 @@ functions:
           - http:
               path: /categories/{id}
               method: get
+              cors: true
     
     creteCategory:
         handler: handlers/CategoriesHandler/CreateCategory.createCategory
@@ -56,22 +58,23 @@ functions:
           - http:
               path: /update-category/{id}
               method: put
+              cors: true
     
-    deleteCategory:
+    deletecategory:
         handler: handlers/CategoriesHandler/DeleteCategory.deleteCategory
         events:
           - http:
               path: /delete-category/{id}
               method: delete
-
+              cors: true
     #Products
-
     getAllProducts:
         handler: handlers/ProductsHandler/GetAllProducts.getAllProducts
         events:
           - http: 
               path: /products
               method: get
+              cors: true
 
     getProductById:
         handler: handlers/ProductsHandler/GetProductById.getProductById
@@ -79,6 +82,7 @@ functions:
           - http:
               path: /products/{id}
               method: get
+              cors: true
     
     createProduct:
         handler: handlers/ProductsHandler/CreateProduct.createProduct
@@ -86,6 +90,7 @@ functions:
           - http:
               path: /create-product
               method: post
+              cors: true
 
     deleteProduct:
         handler: handlers/ProductsHandler/DeleteProduct.deleteProduct
@@ -93,7 +98,33 @@ functions:
           - http:
               path: /delete-product/{id}
               method: delete
-              
+              cors: true
+            
+    #Customers
+    getAllCustomers:
+        handler: handlers/CustomersHandler/GetCustomers.getCustomers
+        events:
+          - http:
+              path: /customers
+              method: get
+              cors: true
+          
+    createCustomer:
+        handler: handlers/CustomersHandler/CreateCustomer.createCustomer
+        events:
+          - http:
+              path: /create-customer
+              method: post
+              cors: true
+    
+    deleteCustomer: 
+        handler: handlers/CustomersHandler/DeleteCustomer.deleteCustomer
+        events:
+          - http:
+              path: /delete-customer
+              method: delete
+              cors: true
+
 
 
 # you can overwrite defaults here
