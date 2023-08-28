@@ -1,0 +1,133 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: meliora-backend2
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: joana
+
+
+
+functions:  
+    getcategories:
+        handler: handlers/CategoriesHandler/GetCategories.getCategories
+        events: 
+          - http:
+              path: /categories
+              method: get
+    
+    getCategoryById:
+        handler: handlers/CategoriesHandler/GetCategoryById.getCategoryById
+        events: 
+          - http:
+              path: /categories/{id}
+              method: get
+    
+    creteCategory:
+        handler: handlers/CategoriesHandler/CreateCategory.createCategory
+        events:
+          - http:
+              path: /post-category
+              method: post
+              cors: true
+
+    updateCategory:
+        handler: handlers/CategoriesHandler/UpdateCategory.updateCategory
+        events:
+          - http:
+              path: /update-category/{id}
+              method: put
+    
+    deleteCategory:
+        handler: handlers/CategoriesHandler/DeleteCategory.deleteCategory
+        events:
+          - http:
+              path: /delete-category/{id}
+              method: delete
+
+    #Products
+
+    getAllProducts:
+        handler: handlers/ProductsHandler/GetAllProducts.getAllProducts
+        events:
+          - http: 
+              path: /products
+              method: get
+
+    getProductById:
+        handler: handlers/ProductsHandler/GetProductById.getProductById
+        events:
+          - http:
+              path: /products/{id}
+              method: get
+    
+    createProduct:
+        handler: handlers/ProductsHandler/CreateProduct.createProduct
+        events:
+          - http:
+              path: /create-product
+              method: post
+
+    deleteProduct:
+        handler: handlers/ProductsHandler/DeleteProduct.deleteProduct
+        events: 
+          - http:
+              path: /delete-product/{id}
+              method: delete
+              
+
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iam:
+#    role:
+#      statements:
+#        - Effect: "Allow"
+#          Action:
+#            - "s3:ListBucket"
+#          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#        - Effect: "Allow"
+#          Action:
+#            - "s3:PutObject"
+#          Resource:
+#            Fn::Join:
+#              - ""
+#              - - "arn:aws:s3:::"
+#                - "Ref" : "ServerlessDeploymentBucket"
+#                - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  patterns:
+#    - '!exclude-me.js'
+#    - '!exclude-me-dir/**'
+#    - include-me.js
+#    - include-me-dir/**
+
+
