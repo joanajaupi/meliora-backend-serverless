@@ -98,7 +98,14 @@ functions:
               path: /delete-product/{id}
               method: delete
               cors: true
-            
+    
+    updateProduct:
+        handler: handlers/ProductsHandler/UpdateProduct.updateProduct
+        events:
+          - http:
+              path: /update-product/{id}
+              method: put
+              cors: true
     #Customers
     getAllCustomers:
         handler: handlers/CustomersHandler/GetCustomers.getCustomers
