@@ -134,7 +134,7 @@ functions:
         
     getCustomerById: 
         handler: handlers/CustomersHandler/GetCustomerById.getCustomerById
-        event: 
+        events: 
           - http:
               path: /customer/{id}
               method: get
