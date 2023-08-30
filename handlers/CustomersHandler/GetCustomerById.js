@@ -1,31 +1,17 @@
-const connectToDatabase = require('../../database/db')
-const Customer = require('../../models/CustomerModel')
+const connectToDatabase = require('../../database/db');
+const models = require('../../models/models');
+const Responses = require('../../API_Responses');
 
 module.exports.getCustomerById = async (event) => {
 
     try{
-
-        await connectToDatabase()
-        const customer = await Customer.findById(event.pathParameters.id)
+        await connectToDatabase();
+        const customer = await models.Customer.findById(event.pathParameters.id);
         if(!customer) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({message: "user not found"})
-            }
+            return Responses._404({message: 'Customer not found'});
         }
-        return {
-            statusCode: 200,
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "*"
-            },
-            body: JSON.stringify(customer)
-        }
+        return Responses._200({customer});
     }catch(error){
-        return {
-            statusCode: 500,
-            body: JSON.stringify({message: "something went wrong"})
-        }
+        return Responses._500({message: 'Something went wrong'});
     }
-}
+};

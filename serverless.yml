@@ -1,30 +1,23 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: meliora-backend2
-# app and org for use with dashboard.serverless.com
-#app: your-app-name
-#org: your-org-name
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
 frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs14.x
   profile: joana
+  region: eu-north-1
 
+plugins:
+  - serverless-webpack
+  - serverless-dotenv-plugin
+
+
+package:
+  individually: true
+  
+
+custom:
+  imageUploadBucket: meliora-images-bucket
 
 functions:  
     getcategories:
@@ -106,6 +99,7 @@ functions:
               path: /update-product/{id}
               method: put
               cors: true
+
     #Customers
     getAllCustomers:
         handler: handlers/CustomersHandler/GetCustomers.getCustomers
@@ -146,3 +140,26 @@ functions:
               path: /customer/{id}
               method: get
               cors: true
+        
+    uploadImage:
+        handler: handlers/ProductsHandler/UploadImage.uploadImage
+        events:
+          - http:
+              path: /upload-image
+              method: post
+              cors: true
+    
+    deleteImage:
+        handler: handlers/ProductsHandler/DeleteImageFromS3.deleteObjectFromS3
+        events:
+          - http:
+              path: /delete-image/{key}
+              method: delete
+              cors: true
+
+resources:
+  Resources:
+    ImageUploadBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.imageUploadBucket}

@@ -1,42 +1,28 @@
-const connectToDatabase = require('../../database/db')
-const Product = require('../../models/ProductModel')
-
-
+const connectToDatabase = require('../../database/db');
+const models = require('../../models/models');
+const Responses = require('../../API_Responses');
 module.exports.updateProduct = async (event) => {
 
     try{
-
-        const {productName, productPrice, productDescription, productCategory, imageBase64} = JSON.parse(event.body)
-
-        await connectToDatabase()
-        const productToUpdate = await Product.findOneAndUpdate(
+        const {productName, productPrice, productDescription, productCategory, imageBase64} = JSON.parse(event.body);
+        await connectToDatabase();
+        const productToUpdate = await models.Product.findOneAndUpdate(
             {
                 _id: event.pathParameters.id
             },
             {
                 $set: {
                     productName,
-                    productPrice, 
-                    productDescription, 
+                    productPrice,
+                    productDescription,
                     productCategory,
                     imageBase64
                 }
             }
-        )
-        console.log(productToUpdate)
-        return {
-            statusCode: 200,
-            headers : {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "*"
-            },
-            body: JSON.stringify(productToUpdate)
-        }
+        );
+        console.log(productToUpdate);
+        return Responses._200({message: 'Product updated successfully', productToUpdate});
     }catch(error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({message: "something went wrong"})
-        }
+        return Responses._500({message: 'Something went wrong'});
     }
-}
+};

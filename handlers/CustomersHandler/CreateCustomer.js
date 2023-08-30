@@ -1,6 +1,6 @@
-const Customer = require('../../models/CustomerModel');
-const connectToDatabase = require('../../database/db')
-
+const connectToDatabase = require('../../database/db');
+const models = require('../../models/models');
+const Responses = require('../../API_Responses');
 
 module.exports.createCustomer = async (event) => {
 
@@ -8,45 +8,32 @@ module.exports.createCustomer = async (event) => {
         const {name, email, phone, password} = JSON.parse(event.body);
         if(!name || !email || !phone || !password)
         {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({
-                    message: 'All fields are required'
-                })
-
-            }
+            return Responses._400({message: 'All fields are required'});
         }
+        if(!/^[a-zA-Z]+$/.test(name)) {
+            return Responses._400({message: 'Name must be alphanumeric'});
+        }
+        if(!/^[a-zA-Z0-9]+$/.test(password) || password.length < 8) {
+            return Responses._400({message: 'Invalid password format or length'});
+        }
+        if(!/^[0-9]+$/.test(phone) || phone.length != 10) {
+            return Responses._400({message: 'Invalid phone number'});
+        }
+        if(!/^[a-zA-Z0-9]+@[a-zA-Z]+\.[A-Za-z]+$/.test(email)) {
+            return Responses._400({message: 'Invalid email format'});
+        }
+        await connectToDatabase();
 
-        await connectToDatabase()
-
-        const newCustomer = new Customer({
+        const newCustomer = new models.Customer({
             "name": name,
             "email": email,
             "phone": phone,
             "password": password
-        })
+        });
 
-        const customer = await Customer.create(newCustomer)
-        return {
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Allow-Methods": "*"
-            },
-            body: JSON.stringify(customer)
-        }
+        const customer = await models.Customer.create(newCustomer);
+        return Responses._200({customer});
         }catch(error) {
-            return {
-                statusCode: 500,
-                body: JSON.stringify(
-                    {
-
-                        message: "something went wrong",
-                        error: error
-                    }
-                )
-            }
+            return Responses._500({message: 'Something went wrong'});
         }
-
-    }
+};

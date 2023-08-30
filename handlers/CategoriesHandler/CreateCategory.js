@@ -1,53 +1,24 @@
-const connectToDatabase = require('../../database/db')
-const Category = require('../../models/CategoryModel')
-
+const connectToDatabase = require('../../database/db');
+const models = require('../../models/models');
+const Responses = require('../../API_Responses');
 
 module.exports.createCategory = async (event) => {
     try{
     const { categoryName } = JSON.parse(event.body);
-        if(!categoryName) 
-        {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({
-                    message: 'Category name is required'
-                })
-
-            }
+        if(!categoryName){
+            return Responses._400({message: 'All fields are required'});
         }
         if(!/^[a-zA-Z0-9 ]+$/.test(categoryName)) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({
-                    message: 'Category name must be alphanumeric'
-                })
-            }
+            return Responses._400({message: 'Category name must be alphanumeric'});
         }
-        const newCategory = new Category({
+        const newCategory = new models.Category({
             "categoryName": categoryName
-        })
+        });
 
-        
-            await connectToDatabase()
-            const category = await Category.create(newCategory)
-            return {
-                statusCode: 200,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers": "*"
-                },
-                body: JSON.stringify(category)
-            }
+            await connectToDatabase();
+            const category = await models.Category.create(newCategory);
+            return Responses._200({category});
         }catch(error) {
-            return {
-                statusCode: 500,
-                body: JSON.stringify(
-                    {
-
-                        message: "something went wrong",
-                        error: error
-                    }
-                )
-            }
+            return Responses._500({message: 'Something went wrong'});
         }
-}
+};

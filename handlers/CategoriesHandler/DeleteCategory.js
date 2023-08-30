@@ -1,45 +1,18 @@
-const connectToDatabase =  require('../../database/db')
-const Category = require('../../models/CategoryModel')
-
-
+const connectToDatabase =  require('../../database/db');
+const models = require('../../models/models');
+const Responses = require('../../API_Responses');
 module.exports.deleteCategory = async (event) => {
 
     try{
-
-        await connectToDatabase()
-        const id = event.pathParameters.id
-        const category = await Category.findByIdAndRemove(id)
+        await connectToDatabase();
+        const id = event.pathParameters.id;
+        const category = await models.Category.findByIdAndRemove(id);
         if(!category) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({
-                    message: 'Category not found'
-                })
-            }
+            return Responses._404({message: `Category with id: ${id} not found`})
         }
         //also remove products related to this category.
-        return {
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Allow": "GET, OPTIONS, POST",
-                "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
-                "Access-Control-Allow-Headers": "*"
-            },
-            statusCode: 200,
-            body: JSON.stringify({
-                message:`Category with id: ${id} deleted successfully`,
-                category
-            }) 
-        }
+        return Responses._200({message:`Category with id: ${id} deleted successfully`, category});
     }catch(error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify(
-                {
-                    message: "something went wrong"
-                }
-            )
-        }
+        return Responses._500({message: 'Something went wrong'});
     }
-}
+};

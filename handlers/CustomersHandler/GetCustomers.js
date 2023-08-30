@@ -1,35 +1,18 @@
-const customerModel = require('../../models/CustomerModel');
-const connectToDatabase = require('../../database/db')
-
-
+const connectToDatabase = require('../../database/db');
+const models = require('../../models/models');
+const Responses = require('../../API_Responses');
 module.exports.getCustomers = async (event) => {
 
     try{
-        await connectToDatabase()
-        const customers = await customerModel.find();
+        await connectToDatabase();
+        const customers = await models.Customer.find();
         if(customers.length === 0){
-            return{
-                statusCode: 404,
-                body: JSON.stringify({message: 'No customers found'}),
-            }
+            return Responses._404({message: 'No customers found'});
         }
-
-        return {
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "*",
-
-            },
-            statusCode: 200,
-            body: JSON.stringify(customers)
-        }
+        return Responses._200({customers});
 
     }catch(error){
-        console.log(error)
-        return {
-            statusCode: 500,
-            body: JSON.stringify(error),
-        }
+        console.log(error);
+        return Responses._500({message: 'Something went wrong'});
     }
-}
+};
