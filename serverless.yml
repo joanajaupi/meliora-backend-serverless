@@ -10,6 +10,7 @@ provider:
 plugins:
   - serverless-webpack
   - serverless-dotenv-plugin
+  - serverless-plugin-optimize
 
 
 package:
@@ -18,6 +19,8 @@ package:
 
 custom:
   imageUploadBucket: meliora-images-bucket
+  optimizer: 
+    memorySize: 500
 
 functions:  
     getcategories:
@@ -121,7 +124,7 @@ functions:
         handler: handlers/CustomersHandler/DeleteCustomer.deleteCustomer
         events:
           - http:
-              path: /delete-customer
+              path: /delete-customer/{id}
               method: delete
               cors: true
 

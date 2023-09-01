@@ -11,6 +11,9 @@ module.exports.deleteCategory = async (event) => {
             return Responses._404({message: `Category with id: ${id} not found`})
         }
         //also remove products related to this category.
+        await models.Product.deleteMany({productCategory: id});
+
+
         return Responses._200({message:`Category with id: ${id} deleted successfully`, category});
     }catch(error) {
         return Responses._500({message: 'Something went wrong'});

@@ -22,6 +22,7 @@ module.exports.createCustomer = async (event) => {
         if(!/^[a-zA-Z0-9]+@[a-zA-Z]+\.[A-Za-z]+$/.test(email)) {
             return Responses._400({message: 'Invalid email format'});
         }
+        
         await connectToDatabase();
 
         const newCustomer = new models.Customer({

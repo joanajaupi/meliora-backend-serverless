@@ -8,7 +8,7 @@ module.exports.createCategory = async (event) => {
         if(!categoryName){
             return Responses._400({message: 'All fields are required'});
         }
-        if(!/^[a-zA-Z0-9 ]+$/.test(categoryName)) {
+        if(!/^[a-zA-Z]+$/.test(categoryName)) {
             return Responses._400({message: 'Category name must be alphanumeric'});
         }
         const newCategory = new models.Category({

@@ -9,7 +9,7 @@ module.exports.getAllProducts = async (event) => {
         await connectToDatabase();
         let totalDocuments = await models.Product.countDocuments();
         console.log(totalDocuments);
-        const products = await models.Product.find().skip(skipValue).limit(9);
+        const products = await models.Product.find().skip(skipValue).limit(9).populate('productCategory').exec();
         if(!products) {
             return Responses._404({message: 'No products found'});
         }

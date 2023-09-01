@@ -4,7 +4,7 @@ const Responses = require('../../API_Responses')
 module.exports.getProductById = async (event) => {
     try{
         await connectToDatabase();
-        const product = await models.Product.findById(event.pathParameters.id);
+        const product = await models.Product.findById(event.pathParameters.id).populate('productCategory').exec();
         if(!product) {
             return Responses._404({message: 'Product not found'});
         }
