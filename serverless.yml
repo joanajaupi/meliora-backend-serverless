@@ -31,6 +31,8 @@ functions:
               path: /categories
               method: get
               cors: true
+              
+                
     
     getCategoryById:
         handler: handlers/CategoriesHandler/GetCategoryById.getCategoryById
@@ -47,6 +49,11 @@ functions:
               path: /post-category
               method: post
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
 
     updateCategory:
         handler: handlers/CategoriesHandler/UpdateCategory.updateCategory
@@ -63,6 +70,11 @@ functions:
               path: /delete-category/{id}
               method: delete
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
     #Products
     getAllProducts:
         handler: handlers/ProductsHandler/GetAllProducts.getAllProducts
@@ -87,6 +99,11 @@ functions:
               path: /create-product
               method: post
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
 
     deleteProduct:
         handler: handlers/ProductsHandler/DeleteProduct.deleteProduct
@@ -95,6 +112,11 @@ functions:
               path: /delete-product/{id}
               method: delete
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
     
     updateProduct:
         handler: handlers/ProductsHandler/UpdateProduct.updateProduct
@@ -103,6 +125,11 @@ functions:
               path: /update-product/{id}
               method: put
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
 
     #Customers
     getAllCustomers:
@@ -152,6 +179,11 @@ functions:
               path: /upload-image
               method: post
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
     
     deleteImage:
         handler: handlers/ProductsHandler/DeleteImageFromS3.deleteObjectFromS3
@@ -160,6 +192,11 @@ functions:
               path: /delete-image/{key}
               method: delete
               cors: true
+              authorizer:
+                type: COGNITO_USER_POOLS
+                name: melioraCognitoAuthorizer
+                authorizerId:
+                  Ref: MyCognitoUserPoolAuthorizer
 
 resources:
   Resources:
@@ -185,4 +222,17 @@ resources:
           ExplicitAuthFlows:
             - ADMIN_NO_SRP_AUTH
           GenerateSecret: false
-
+    
+    MyCognitoUserPoolAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: melioraCognitoAuthorizer
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ProviderARNs:
+          - Fn::GetAtt:
+              - CognitoUserPool
+              - Arn
+		 
