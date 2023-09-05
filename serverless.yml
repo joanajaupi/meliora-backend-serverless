@@ -105,6 +105,7 @@ functions:
                 authorizerId:
                   Ref: MyCognitoUserPoolAuthorizer
 
+
     deleteProduct:
         handler: handlers/ProductsHandler/DeleteProduct.deleteProduct
         events: 
@@ -172,18 +173,8 @@ functions:
               method: get
               cors: true
         
-    uploadImage:
-        handler: handlers/ProductsHandler/UploadImage.uploadImage
-        events:
-          - http:
-              path: /upload-image
-              method: post
-              cors: true
-              authorizer:
-                type: COGNITO_USER_POOLS
-                name: melioraCognitoAuthorizer
-                authorizerId:
-                  Ref: MyCognitoUserPoolAuthorizer
+    
+              
     
     deleteImage:
         handler: handlers/ProductsHandler/DeleteImageFromS3.deleteObjectFromS3

@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
-    imageBase64: {
+    imageLink: {
         type: String,
         required: true
     }
