@@ -204,6 +204,17 @@ resources:
             - email
           AutoVerifiedAttributes:
             - email
+          Schema: 
+            - Name: name
+              AttributeDataType: String
+              Required: true
+            - Name: phone_number
+              AttributeDataType: String
+              Required: true
+            - Name: role
+              AttributeDataType: String
+              Required: false
+              Mutable: true
     CognitoUserPoolClient:
         Type: AWS::Cognito::UserPoolClient
         Properties:
@@ -226,4 +237,3 @@ resources:
           - Fn::GetAtt:
               - CognitoUserPool
               - Arn
-		 

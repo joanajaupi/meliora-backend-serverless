@@ -4,7 +4,11 @@ const Responses = require('../../API_Responses');
 
 module.exports.createCategory = async (event) => {
     try{
-    const { categoryName } = JSON.parse(event.body);
+        const userRole = event.requestContext.authorizer.claims['custom:role'];
+        if (userRole !== 'admin') {
+            return Responses._403({ message: 'Access denied. You must be an admin to perform this action.' });
+        }
+        const { categoryName } = JSON.parse(event.body);
         if(!categoryName){
             return Responses._400({message: 'All fields are required'});
         }

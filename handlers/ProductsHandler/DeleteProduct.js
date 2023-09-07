@@ -3,6 +3,10 @@ const models = require('../../models/models');
 const Responses = require('../../API_Responses');
 module.exports.deleteProduct = async (event) => {
     try{
+        const userRole = event.requestContext.authorizer.claims['custom:role'];
+        if (userRole !== 'admin') {
+            return Responses._403({ message: 'Access denied. You must be an admin to perform this action.' });
+        }
         await connectToDatabase();
         const id = event.pathParameters.id;
         const product = await models.Product.findByIdAndDelete(id);

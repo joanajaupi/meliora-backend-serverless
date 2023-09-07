@@ -42,7 +42,18 @@ const Responses = {
             statusCode: 400,
             body: JSON.stringify(data),
         };
+    },
+    _403(data = {}) {
+        return {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "*",
+            },
+            statusCode: 403,
+            body: JSON.stringify(data),
+        };
+    
     }
 };
-
 module.exports = Responses;

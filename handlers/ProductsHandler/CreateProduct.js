@@ -9,6 +9,10 @@ module.exports.createProduct = async (event) => {
     const {productName, productDescription, productPrice, productCategory, imageData} = JSON.parse(event.body);
     try{
         await connectToDatabase();
+        const userRole = event.requestContext.authorizer.claims['custom:role'];
+        if (userRole !== 'admin') {
+            return Responses._403({ message: 'Access denied. You must be an admin to perform this action.' });
+        }
         const category = await models.Category.findById(productCategory);
         if(!category) {
             return Responses._404({message: 'Category not found'});
